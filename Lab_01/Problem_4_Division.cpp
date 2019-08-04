@@ -72,9 +72,9 @@ int comp(string p,string q)
 
 int main()
 {
-    long long int t=0;
-    cin>>t;
-    for(long long int y=0;y<t;++y)
+    long long int T;
+    cin>>T;
+    for(long long int y=0;y<T;++y)
     {
         string A,B;
         cin>>A>>B;
