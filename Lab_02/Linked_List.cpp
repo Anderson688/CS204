@@ -11,11 +11,11 @@ class node
 
 node* head = NULL;
 
-void AddFirst(int x, int y)
+void AddFirst(int a, int b)
 {
     node* new_node = new node();
-    new_node->x = x;
-    new_node->y = y;
+    new_node->x = a;
+    new_node->y = b;
     new_node->next = head;
     head = new_node;
 }
@@ -23,16 +23,14 @@ void AddFirst(int x, int y)
 void DelFirst()
 {
     if(head == NULL)
-        cout << -1;
+        cout << -1 << endl;
     else
     {
         node* temp = head;
         head = temp->next;
         temp->next = NULL;
         delete temp;
-        cout << 0;
     }
-    cout << endl;
 }
 
 // Used in Del() function.
@@ -40,10 +38,9 @@ void dlt(node* ptr, node* prev)
 {
     prev->next = ptr->next;
     delete ptr;
-    cout << 0 << endl;
 }
 
-void Del(int x, int y)
+void Del(int a, int b)
 {
     int counter = 0;
     node *prev, *temp = head;
@@ -53,7 +50,7 @@ void Del(int x, int y)
     {
         /* There can be more than one node with same value of x and y,
            therefore deleting all. */
-        if(temp->x == x && temp->y == y)
+        if(temp->x == a && temp->y == b)
         {
             if(temp == head)
                 DelFirst();
@@ -71,23 +68,28 @@ void Del(int x, int y)
 
 void Search(double d)
 {
+    int counter = 0;
     node* temp = head;
     while(temp != NULL)
     {
         if((double)(temp->x)*(double)(temp->x) + (double)(temp->y)*(double)(temp->y) <= d*d)
-            cout << "(" << temp->x << "," << temp->y << ") ";
+            counter++;
         temp = temp->next;
     }
     delete temp;
+    if(counter == 0)
+        cout << -1;
+    else
+        cout << counter;
     cout << endl;
 }
 
-void Search(int x, int y)
+void Search(int a, int b)
 {
     node* temp = head;
     while(temp != NULL)
     {
-        if((temp->x == x) && (temp->y == y))
+        if((temp->x == a) && (temp->y == b))
         {
             cout << "True\n";
             break;
@@ -149,3 +151,4 @@ int main()
     }
     return 0;
 }
+
