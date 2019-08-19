@@ -50,7 +50,7 @@ string in2post(string in)
 		}
 		post.push_back(in[i]);
 	}
-	for(int i = 0; i < s.size(); i++)
+	while(!s.empty())
 	{
         post.push_back(s.top());
         s.pop();
@@ -112,7 +112,7 @@ int main()
 	string s;
 	cin >> s;
 	s = in2post(s);
-    node *root = build(s);
+    	node *root = build(s);
 	cout << eval(root);
 	return 0;
 }
