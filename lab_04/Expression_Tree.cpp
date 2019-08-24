@@ -1,26 +1,43 @@
 #include <iostream>
-#include <stack>
+#include <vector>
 #include <string>
+#include <stack>
+#include <sstream>
 #include <cmath>
 
 using namespace std;
 
 struct node
 {
-	char data;
+	string data;
 	node* left = NULL;
 	node* right = NULL;
 };
 
-string in2post(string in)
+vector<string> in2post(vector<string> in)
 {
-	stack<char> s;
-	string post;
-	for(int i = 0; i < in.length(); i++)
+	stack<string> s;
+	vector<string> post;
+	for(int i = 0; i < in.size(); i++)
 	{
-		if(in[i] == '+' || in[i] == '-')
+	    if(in[i] == "(")
+        {
+            s.push(in[i]);
+            continue;
+        }
+        if(in[i] == ")")
+        {
+            while(s.top() != "(")
+            {
+                post.push_back(s.top());
+                s.pop();
+            }
+            s.pop();
+            continue;
+        }
+		if(in[i] == "+" || in[i] == "-")
 		{
-			while(!s.empty())
+			while(!(s.empty() || s.top() == "("))
 			{
 				post.push_back(s.top());
 				s.pop();
@@ -28,11 +45,11 @@ string in2post(string in)
 			s.push(in[i]);
 			continue;
 		}
-		if(in[i] == '*' || in[i] == '/')
+		if(in[i] == "*" || in[i] == "/")
 		{
             if(!s.empty())
 			{
-                while(!(s.top() == '+' || s.top() == '-'))
+                while(!(s.top() == "+" || s.top() == "-" || s.top() == "("))
                 {
                     post.push_back(s.top());
                     s.pop();
@@ -43,7 +60,7 @@ string in2post(string in)
 			s.push(in[i]);
 			continue;
 		}
-		if(in[i] == '^')
+		if(in[i] == "^")
 		{
 			s.push(in[i]);
 			continue;
@@ -58,23 +75,17 @@ string in2post(string in)
 	return post;
 }
 
-int toint(char a)
-{
-    int i = a-48;
-    return i;
-}
-
-node *build(string post)
+node *build(vector<string> post)
 {
     stack<node *> s;
-    node *temp = NULL, *root = NULL;
+    node *root = NULL;
     for(int i = 0; i < post.size(); i++)
     {
-        if(!(post[i] == '+' || post[i] == '-' || post[i] == '*' || post[i] == '/' || post[i] == '^'))
+        if(post[i] >= "0" && post[i] <= "9")
         {
-            temp = new node;
-            temp->data = post[i];
-            s.push(temp);
+            root = new node;
+            root->data = post[i];
+            s.push(root);
             continue;
         }
         root = new node;
@@ -88,31 +99,75 @@ node *build(string post)
     return root;
 }
 
+int toint(string a)
+{
+    stringstream intstrm(a);
+    int i = 0;
+    intstrm >> i;
+    return i;
+}
+
 int eval(node* root)
 {
-    if (!root)
-        return 0;
     if (!root->left && !root->right)
         return toint(root->data);
     int l = eval(root->left);
     int r = eval(root->right);
-    if(root->data == '+')
+    if(root->data == "+")
         return l+r;
-    if(root->data == '-')
+    if(root->data == "-")
         return l-r;
-    if(root->data == '*')
+    if(root->data == "*")
         return l*r;
-    if(root->data == '/')
+    if(root->data == "/")
         return l/r;
     return pow(l, r);
 }
 
+vector<string> strng2vect(string s)
+{
+    vector<string> in;
+    for(int i = 0; i < s.size(); i++)
+    {
+        int refr;
+        string temp = "";
+        if((s[i] > 47 && s[i] < 58) || (s[i] == '-' && s[i-1] == '('))
+        {
+            refr = i;
+            i++;
+            while(s[i] > 47 && s[i] < 58)
+                i++;
+            for(int j = refr; j < i; j++)
+                temp += s[j];
+            in.push_back(temp);
+            i--;
+            continue;
+        }
+        if(s[i] == '+')
+            in.push_back("+");
+        if(s[i] == '-')
+            in.push_back("-");
+        if(s[i] == '*')
+            in.push_back("*");
+        if(s[i] == '/')
+            in.push_back("/");
+        if(s[i] == '^')
+            in.push_back("^");
+        if(s[i] == '(')
+            in.push_back("(");
+        if(s[i] == ')')
+            in.push_back(")");
+    }
+    return in;
+}
+
 int main()
 {
-	string s;
-	cin >> s;
-	s = in2post(s);
-    	node *root = build(s);
-	cout << eval(root);
-	return 0;
+        string s;
+        cin >> s;
+        vector<string> in = strng2vect(s);
+        vector<string> post = in2post(in);
+        node *root = build(post);
+        cout << eval(root);
+    return 0;
 }
