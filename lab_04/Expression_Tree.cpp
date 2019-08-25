@@ -81,7 +81,7 @@ node *build(vector<string> post)
     node *root = NULL;
     for(int i = 0; i < post.size(); i++)
     {
-        if(post[i] >= "0" && post[i] <= "9")
+        if(!(post[i] == "+" || post[i] == "-" || post[i] == "*" || post[i] == "/" || post[i] == "^"))
         {
             root = new node;
             root->data = post[i];
@@ -109,6 +109,8 @@ int toint(string a)
 
 int eval(node* root)
 {
+    if (!root)
+        return 0;
     if (!root->left && !root->right)
         return toint(root->data);
     int l = eval(root->left);
@@ -121,7 +123,7 @@ int eval(node* root)
         return l*r;
     if(root->data == "/")
         return l/r;
-    return pow(l, r);
+    return (int)(pow(l, r) + 0.5);
 }
 
 vector<string> strng2vect(string s)
@@ -163,11 +165,20 @@ vector<string> strng2vect(string s)
 
 int main()
 {
-        string s;
-        cin >> s;
-        vector<string> in = strng2vect(s);
-        vector<string> post = in2post(in);
-        node *root = build(post);
-        cout << eval(root);
+    int t,l;
+    cin >> t;
+    while(t--)
+    {
+        cin >> l;
+        while(l--)
+        {
+            string s;
+            cin >> s;
+            vector<string> in = strng2vect(s);
+            vector<string> post = in2post(in);
+            node *root = build(post);
+            cout << eval(root) << endl;
+        }
+    }
     return 0;
 }
