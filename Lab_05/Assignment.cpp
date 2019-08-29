@@ -4,8 +4,7 @@
 #include <stack>
 #include <sstream>
 #include <cmath>
-#include <iterator> 
-#include <map> 
+#include <utility>
 #include <string.h>
 
 using namespace std;
@@ -17,7 +16,7 @@ struct node
 	node* right = NULL;
 };
 
-map<int, int> assign;
+vector<pair<string, int>> assign;
 
 vector<string> in2post(vector<string> in)
 {
@@ -106,10 +105,19 @@ node *build(vector<string> post)
 
 int toint(string a)
 {
-    stringstream intstrm(a);
-    int i = 0;
-    intstrm >> i;
-    return i;
+    if(a[0] >= '0' && a[0] <= '9')
+    {
+      	stringstream intstrm(a);
+      	int i = 0;
+      	intstrm >> i;
+      	return i;
+    }
+		cout << a;
+    for(int i = assign.size()-1; i >= 0; i--)
+    {
+        if(assign[i].first == a)
+            return assign[i].second;
+    }
 }
 
 int eval(node* root)
@@ -182,25 +190,26 @@ int main()
 						int pos = 0, flag = 0;
 						for(pos; pos < s.size(); pos++)
 						{
-							if(s[i] == '=')
-							{
-									flag++;
-									break;
-							}
+              	if(s[pos] == '=')
+								{
+										flag++;
+										break;
+								}
 						}
 						if(flag)
 						{
-            		vector<string> in = strng2vect(s.substr(pos+1));
-            		vector<string> post = in2post(in);
-            		node *root = build(post);
-            		cout << eval(root) << endl;
+            		 vector<string> in = strng2vect(s.substr(pos+1));
+            		 vector<string> post = in2post(in);
+            		 node *root = build(post);
+								 int x = eval(root);
+            		 assign.push_back(make_pair(s.substr(0,pos), x));
 						}
-						else 
+						else
 						{
-							vector<string> in = strng2vect(s);
-							vector<string> post = in2post(in);
-							node *root = build(post);
-							cout << eval(root) << endl;
+					       vector<string> in = strng2vect(s);
+                 vector<string> post = in2post(in);
+							   node *root = build(post);
+		             cout << eval(root) << endl;
 						}
         }
     }
