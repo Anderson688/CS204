@@ -16,7 +16,8 @@ struct node
 	node* right = NULL;
 };
 
-vector<pair<string, int>> assign;
+int call = 0;
+vector< pair<string, int> > assign;
 
 vector<string> in2post(vector<string> in)
 {
@@ -112,11 +113,20 @@ int toint(string a)
       	intstrm >> i;
       	return i;
     }
-		cout << a;
+    int temp = 0;
     for(int i = assign.size()-1; i >= 0; i--)
     {
         if(assign[i].first == a)
+        {
+            temp++;
             return assign[i].second;
+        }
+    }
+    if(temp == 0)
+    {
+        cout << "Can't be evaluated" << endl;
+        call = 1;
+        return 0;
     }
 }
 
@@ -146,11 +156,11 @@ vector<string> strng2vect(string s)
     {
         int refr;
         string temp = "";
-        if((s[i] > 47 && s[i] < 58) || (s[i] == '-' && s[i-1] == '('))
+        if((s[i] > 47 && s[i] < 58) || (s[i] == '-' && s[i-1] == '(') || (s[i] > 64 && s[i] < 91) || (s[i] > 96 && s[i] < 123))
         {
             refr = i;
             i++;
-            while(s[i] > 47 && s[i] < 58)
+            while((s[i] > 47 && s[i] < 58) || (s[i] > 64 && s[i] < 91) || (s[i] > 96 && s[i] < 123))
                 i++;
             for(int j = refr; j < i; j++)
                 temp += s[j];
@@ -187,31 +197,36 @@ int main()
         {
             string s;
             cin >> s;
-						int pos = 0, flag = 0;
-						for(pos; pos < s.size(); pos++)
-						{
-              	if(s[pos] == '=')
-								{
-										flag++;
-										break;
-								}
-						}
-						if(flag)
-						{
-            		 vector<string> in = strng2vect(s.substr(pos+1));
-            		 vector<string> post = in2post(in);
-            		 node *root = build(post);
-								 int x = eval(root);
-            		 assign.push_back(make_pair(s.substr(0,pos), x));
-						}
-						else
-						{
-					       vector<string> in = strng2vect(s);
-                 vector<string> post = in2post(in);
-							   node *root = build(post);
-		             cout << eval(root) << endl;
-						}
+            int pos = 0, flag = 0;
+            for(pos; pos < s.size(); pos++)
+            {
+                if(s[pos] == '=')
+                {
+                    flag++;
+                    break;
+                }
+            }
+            if(flag)
+            {
+                vector<string> in = strng2vect(s.substr(pos+1));
+                vector<string> post = in2post(in);
+                node *root = build(post);
+                int x = eval(root);
+                if(call == 0)
+                    assign.push_back(make_pair(s.substr(0,pos), x));
+            }
+            else
+            {
+                vector<string> in = strng2vect(s);
+                vector<string> post = in2post(in);
+                node *root = build(post);
+                int x = eval(root);
+                if(call == 0)
+                    cout << x << endl;
+            }
+            call = 0;
         }
+        assign.clear();
     }
     return 0;
 }
