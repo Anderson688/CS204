@@ -26,14 +26,14 @@ vector<Point> convex_hull(vector<Point> A)
 	vector<Point> ans(2*n);
     	sort(A.begin(), A.end());
 	for(int i = 0; i < n; ++i)
-   	{
+    	{
 		while(k >= 2 && cross_product(ans[k-2], ans[k-1], A[i]) <= 0)
 			k--;
 		ans[k++] = A[i];
 	}
 	for(size_t i = n-1, t = k+1; i > 0; --i)
 	{
-        while(k >= t && cross_product(ans[k-2], ans[k-1], A[i-1]) <= 0)
+        	while(k >= t && cross_product(ans[k-2], ans[k-1], A[i-1]) <= 0)
 			k--;
 		ans[k++] = A[i-1];
 	}
@@ -53,6 +53,11 @@ int main()
 		points.push_back({x, y});
 	}
 	vector<Point> ans = convex_hull(points);
+	if(ans.size() < 3)
+    	{
+        	cout << 0;
+        	return 0;
+    	}
     	cout << ans.size() << endl << ans[0].x << " " << ans[0].y << endl;
 	for (int i = ans.size()-1; i > 0; i--)
 		cout << ans[i].x << " " << ans[i].y << endl;
