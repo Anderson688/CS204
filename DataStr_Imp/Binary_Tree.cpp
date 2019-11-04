@@ -77,15 +77,15 @@ int countNodes(node* root)
 
 int main(){
     node* root = NULL;
-	root = insertLeft(root, 84);
+	root = insertLeft(root, 4);
 		inorder(root);
-	insertRight(root, 78);
+	insertRight(root, 3);
 		inorder(root);
-insertLeft(root->r, 74);
+insertLeft(root->r, 6);
 	inorder(root);
 
-
-	insertRight(root, 46);
+insertLeft(root, 64);
+	insertRight(root->l, 46);
 	inorder(root);
 
 insertRight(root, 57);
