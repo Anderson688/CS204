@@ -95,7 +95,7 @@ void queue_list::display()
         cout << "Queue is empty" << endl;
     else
     {
-        cout << "Queue elements :" << endl;
+        cout << "Queue elements : ";
         while(ptr != NULL)
         {
             cout << ptr->info << " ";
